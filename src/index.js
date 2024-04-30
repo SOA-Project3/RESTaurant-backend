@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan"); 
 const menu = require("./models/menu.json"); 
-const port = 5555; 
+const port = 8080; 
 
 const app = express(); //Main express app
 const router = express.Router(); 

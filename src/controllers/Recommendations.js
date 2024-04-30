@@ -1,5 +1,5 @@
 const statusCodes = require("../constants/statusCodes");
-const publishHelpers = require("../responseHelpers/PublishPubSubConfig");
+const publishHelpers = require("../helpers/PublishPubSubConfig");
 
 const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/recommendation/custom/"
 
@@ -37,12 +37,13 @@ const getRecommendation = async (req, res, next) => {
 
   const topicName = 'recommendation-backend';
   try {
-    await publishMessage(topicName, messageBody);
-    res.status(statusCodes.OK).send('Message published to Pub/Sub.');
+    await publishHelpers.publishMessage(topicName, messageBody);
+    console.log('Message published to Pub/Sub.')
 
     // Listen for recommendations
     const subscriptionName = 'recommendation-service-sub';
     listenForMessages(subscriptionName);
+    res.status(statusCodes.OK);
 } catch (error) {
     console.error(`Error publishing message to Pub/Sub: ${error}`);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Error publishing message to Pub/Sub");
