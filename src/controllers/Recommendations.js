@@ -39,10 +39,6 @@ const getRecommendation = async (req, res, next) => {
   try {
     await publishHelpers.publishMessage(topicName, messageBody);
     console.log('Message published to Pub/Sub.')
-
-    // Listen for recommendations
-    const subscriptionName = 'recommendation-service-sub';
-    listenForMessages(subscriptionName);
     res.status(statusCodes.OK);
 } catch (error) {
     console.error(`Error publishing message to Pub/Sub: ${error}`);
