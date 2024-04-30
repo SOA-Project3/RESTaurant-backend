@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: "Food Pairing API Gr6"
+  version: "1.0.0"
+  description: "API documentation"
+paths:
+  /recommendation:
+    get:
+      summary: "Get meal pairing recommendations according to our Food Pairing Database"
+      parameters:
+        - name: meal
+          in: query
+          description: "Food required for food pairing"
+          required: false
+          schema:
+            type: string
+        - name: drink
+          in: query
+          description: "Food required for food pairing"
+          required: false
+          schema:
+            type: string
+        - name: dessert
+          in: query
+          description: "Food required for food pairing"
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meal:
+                    type: string
+                  drink:
+                    type: string
+                  dessert:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: "Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of:  meal, drink, dessert."
+        '404':
+          description: "Not Found response. Could not find a recommendation for that meal."
+        '500':
+          description: "Internal Service Error response. Unexpected error."
+  /menu:
+    get:
+      summary: "Get the menu"
+      responses:
+        '200':
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entradas:
+                    type: array
+                    items:
+                      type: object
+                  platos_principales:
+                    type: array
+                    items:
+                      type: object
+                  postres:
+                    type: array
+                    items:
+                      type: object
+                  bebidas:
+                    type: array
+                    items:
+                      type: object

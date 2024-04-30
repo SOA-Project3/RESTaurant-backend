@@ -1,0 +1,100 @@
+{
+  "menu": {
+    "meal": [
+      {
+        "name": "Casado",
+        "description": "Traditional Costa Rican dish including rice, beans, plantains, salad, and choice of protein.",
+        "price": "₡6500"
+      },
+      {
+        "name": "Patacones",
+        "description": "Fried green plantains served with a spicy sauce.",
+        "price": "₡3000"
+      },
+      {
+        "name": "Chifrijo",
+        "description": "A hearty dish of rice, beans, fried pork rinds, chopped tomato, and avocado.",
+        "price": "₡5500"
+      },
+      {
+        "name": "Gallo pinto",
+        "description": "Typical Costa Rican dish of rice and beans cooked together with onions and spices.",
+        "price": "₡2000"
+      },
+      {
+        "name": "Rice and beans",
+        "description": "A simple yet delicious combination of rice and red beans.",
+        "price": "₡2500"
+      },
+      {
+        "name": "Pizza",
+        "description": "Pizza is an Italian dish consisting of a round, thin crust of bread dough topped with tomato sauce and cheese.",
+        "price": "₡6500"
+      }
+    ],
+    "dessert": [
+      {
+        "name": "Flan",
+        "description": "Creamy caramel flan topped with caramel sauce.",
+        "price": "₡3500"
+      },
+      {
+        "name": "Pastel de tres leches",
+        "description": "A moist cake soaked in three types of milk and topped with whipped cream.",
+        "price": "₡4000"
+      },
+      {
+        "name": "Helado de cajeta",
+        "description": "Delicious milk ice cream with a sweet touch of cajeta.",
+        "price": "₡3800"
+      },
+      {
+        "name": "Tiramisú",
+        "description": "Italian dessert made with layers of sponge cake soaked in coffee and mascarpone cream.",
+        "price": "₡4500"
+      },
+      {
+        "name": "Cajeta",
+        "description": "Traditional Mexican sweet made with caramelized goat's milk.",
+        "price": "₡3200"
+      },
+      {
+        "name": "Mousse de chocolate",
+        "description": "Delicious dark chocolate foam with a smooth and creamy texture.",
+        "price": "₡3800"
+      }
+    ],
+    "drinks": [
+      {
+        "name": "Jugo de mango",
+        "description": "Refreshing natural mango juice.",
+        "price": "₡2500"
+      },
+      {
+        "name": "Hiel",
+        "description": "Fresh and pure water.",
+        "price": "₡1000"
+      },
+      {
+        "name": "Cerveza",
+        "description": "Cold and refreshing beer.",
+        "price": "₡2000"
+      },
+      {
+        "name": "Jugos naturales",
+        "description": "Freshly squeezed fruit juices made with seasonal fruits.",
+        "price": "₡2000"
+      },
+      {
+        "name": "Jugo de Naranja",
+        "description": "Delicious fresh orange juice.",
+        "price": "₡2500"
+      },
+      {
+        "name": "Café",
+        "description": "Rich and aromatic Costa Rican coffee.",
+        "price": "₡1500"
+      }
+    ]
+  }
+}
