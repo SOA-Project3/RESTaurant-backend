@@ -17,15 +17,6 @@ app.use(function(req, res, next) {
 const recommendationController = require("./controllers/Recommendations");
 router.get("/recommendations", recommendationController.getRecommendation); 
 
-const hourSuggestion = require("./controllers/HourSuggestions");
-router.get("/suggestions", hourSuggestion.getHourSuggestion); 
-
-const submitFeedback = require("./controllers/ChatBot");
-router.post("/sendFeedback", submitFeedback.submitFeedback); 
-
-const getFeedback = require("./controllers/ChatBot");
-router.get("/getFeedback", getFeedback.getFeedback); 
-
 
 app.get('/menu', (req, res) => {
     res.json(menu);
