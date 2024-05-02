@@ -1,25 +1,22 @@
-/**
- * TODO(developer): Uncomment these variables before running the sample.
- */
-
 // Imports the Google Cloud client library
 const {PubSub} = require('@google-cloud/pubsub');
 
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 
-async function publishMessage(topicNameOrId, data) {
+async function publishMessage(topicName, data) {
+  const jsonString = JSON.stringify(data);
   // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
-  const dataBuffer = Buffer.from(data);
+  const dataBuffer = Buffer.from(jsonString);
 
   try {
     const messageId = await pubSubClient
-      .topic(topicNameOrId)
+      .topic(topicName)
       .publishMessage({data: dataBuffer});
     console.log(`Message ${messageId} published.`);
   } catch (error) {
     console.error(`Received error while publishing: ${error.message}`);
-    process.exitCode = 1;
+    throw error;
   }
 }
 
