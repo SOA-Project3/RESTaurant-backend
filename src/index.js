@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
     next();
   });
 
-const recommendationController = require("./controllers/Recommendations");
+const recommendationController = require("./controllers/recommendation_service");
 router.get("/recommendations", recommendationController.getRecommendation); 
 
 
