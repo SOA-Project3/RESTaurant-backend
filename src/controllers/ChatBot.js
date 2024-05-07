@@ -2,7 +2,7 @@
 const statusCodes = require("../constants/statusCodes");
 const helpers = require("../helpers/ResponseHelpers");
 
-const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/chatbot/";
+const server = "https://us-central1-soa-gr6-p3.cloudfunctions.net/chatbot/";
 
 
 
@@ -65,15 +65,15 @@ const getFeedback = async (req, res, next) => {
 };
 
 function notFoundError(res) {
-  res.status(statusCodes.NOT_FOUND).send("Pending message");
+  res.status(statusCodes.NOT_FOUND).json("Pending message");
 }
 
 function internalServiceError(res) {
-  res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Internal Server Error");
+  res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
 }
 
 function badRequestError(res) {
-  res.status(statusCodes.BAD_REQUEST).send("Bad Request response. Feedback is required.");
+  res.status(statusCodes.BAD_REQUEST).json("Bad Request response. Feedback is required.");
 }
 
 module.exports = {

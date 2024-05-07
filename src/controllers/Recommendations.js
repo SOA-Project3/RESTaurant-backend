@@ -1,7 +1,7 @@
 const statusCodes = require("../constants/statusCodes");
 const helpers = require("../helpers/ResponseHelpers")
 
-const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/recommendation/custom/"
+const server = "https://us-central1-soa-gr6-p3.cloudfunctions.net/recommendation/custom/"
 
 /**
  * Handle external recommendation request
@@ -17,7 +17,7 @@ const getRecommendation = (req, res, next) => {
     const firstParameter = Object.keys(query)[0];
     const firstParameterValue = Object.values(query)[0];
     if (firstParameterValue.length === 0){
-      res.status(statusCodes.NOT_FOUND).send("Input value is empty");
+      res.status(statusCodes.NOT_FOUND).json("Input value is empty");
     }
     let body = `?${firstParameter}=${firstParameterValue}`;
   
@@ -25,7 +25,7 @@ const getRecommendation = (req, res, next) => {
       const secondParameter = Object.keys(query)[1];
       const secondParameterValue = Object.values(query)[1];
       if (secondParameterValue.length === 0){
-        res.status(statusCodes.NOT_FOUND).send("Input value is empty");
+        res.status(statusCodes.NOT_FOUND).json("Input value is empty");
       }
       body += `&${secondParameter}=${secondParameterValue}`;
     }
@@ -49,11 +49,11 @@ const getRecommendation = (req, res, next) => {
       })
       .catch(error => {
         if (error.status == 404) {
-          res.status(statusCodes.NOT_FOUND).send("Could not find a recommendation for that meal");
+          res.status(statusCodes.NOT_FOUND).json("Could not find a recommendation for that meal");
         } else if (error.status == 400) {
-          res.status(statusCodes.BAD_REQUEST).send("Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters");
+          res.status(statusCodes.BAD_REQUEST).json("Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters");
         } else {
-          res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Internal Server Error");
+          res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
         }
       });
   };

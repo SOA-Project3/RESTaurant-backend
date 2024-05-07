@@ -1,2 +1,2 @@
 run:
-	gcloud functions deploy backend --runtime nodejs18 --trigger-http --entry-point app
+	gcloud functions deploy backend --runtime nodejs18 --trigger-http --entry-point app --allow-unauthenticated

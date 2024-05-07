@@ -1,7 +1,7 @@
 const statusCodes = require("../constants/statusCodes");
 const helpers = require("../helpers/ResponseHelpers")
 
-const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/schedule-recommendation/schedule/"
+const server = "https://us-central1-soa-gr6-p3.cloudfunctions.net/schedule-recommendation/schedule/"
 
 /**
  * Handle external recommendation request
@@ -15,12 +15,12 @@ const getHourSuggestion = (req, res, next) => {
 
     const weekday = Object.values(query)[0];
     if (weekday.length === 0){
-      res.status(statusCodes.BAD_REQUEST).send("Weekday input empty")
+      res.status(statusCodes.BAD_REQUEST).json("Weekday input empty")
     }
 
     const reservationHour = Object.values(query)[1];
     if (reservationHour.length === 0){
-      res.status(statusCodes.BAD_REQUEST).send("Reservation hour input empty")
+      res.status(statusCodes.BAD_REQUEST).json("Reservation hour input empty")
     }
     let body = `${weekday}/${reservationHour}`;
     
@@ -45,11 +45,11 @@ const getHourSuggestion = (req, res, next) => {
       })
       .catch(error => {
         if (error.status == 404) {
-          res.status(statusCodes.NOT_FOUND).send("No available day");
+          res.status(statusCodes.NOT_FOUND).json("No available day");
         } else if (error.status == 400) {
-          res.status(statusCodes.BAD_REQUEST).send("Bad Request response. Invalid name day of the week. [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday]. Or invalid hour of the day, 24 hour format and not contain alphabeti letters. Day and time are required params.");
+          res.status(statusCodes.BAD_REQUEST).json("Bad Request response. Invalid name day of the week. [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday]. Or invalid hour of the day, 24 hour format and not contain alphabeti letters. Day and time are required params.");
         } else {
-          res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Internal Server Error");
+          res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
         }
       });
   };
