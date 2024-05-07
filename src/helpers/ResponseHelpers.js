@@ -1,4 +1,6 @@
 const axios = require('axios');
+const statusCodes = require("../constants/statusCodes");
+
 
 
 async function getData(url, next) {
@@ -11,23 +13,24 @@ async function getData(url, next) {
     }
     return await response.json();
   } catch (error) {
-    console.error("Error fetching data:", error);
-    if (next) {
-      next(error);
-    }
+    console.error('Error:', error.response.status);
+    if (error.response.status === statusCodes.FORBIDDEN) {
+      error.status = statusCodes.FORBIDDEN;
+    } 
     throw error;
   }
 }
 
-async function postData(url, body, next) {
+async function postData(url, data) {
   try {
-    const response = await axios.post(url, body);
+    const response = await axios.post(url, data);
+    console.log('Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
-    if (next) {
-      next(error);
-    }
+    console.error('Error:', error.response.status);
+    if (error.response.status === statusCodes.FORBIDDEN) {
+      error.status = statusCodes.FORBIDDEN;
+    } 
     throw error;
   }
 }

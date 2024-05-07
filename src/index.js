@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan"); 
+const bodyParser = require('body-parser');
 const menu = require("./models/menu.json"); 
 const port = 5555; 
 
@@ -7,6 +8,7 @@ const app = express(); //Main express app
 const router = express.Router(); 
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(morgan("tiny")); //Log request
+app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:5555"); // Update to match the domain you will make the request from
@@ -25,6 +27,10 @@ router.post("/sendFeedback", submitFeedback.submitFeedback);
 
 const getFeedback = require("./controllers/ChatBot");
 router.get("/getFeedback", getFeedback.getFeedback); 
+
+const auth = require("./controllers/Authenticator");
+router.post("/login", auth.login); 
+router.post("/register", auth.register); 
 
 
 app.get('/menu', (req, res) => {
