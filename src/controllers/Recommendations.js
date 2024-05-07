@@ -1,5 +1,5 @@
 const statusCodes = require("../constants/statusCodes");
-const publishHelpers = require("../helpers/PublishPubSubConfig");
+const helpers = require("../helpers/ResponseHelpers")
 
 const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/recommendation/custom/"
 
@@ -10,47 +10,53 @@ const server = "https://us-central1-soa-g6-p2.cloudfunctions.net/recommendation/
  * @returns
  */
 
-const getRecommendation = async (req, res, next) => {
-  const query = req.query;
-  const queryKeys = Object.keys(query);
-  const queryLength = queryKeys.length;
+const getRecommendation = (req, res, next) => {
+    const query = req.query;
   
-  // Check if any input value is empty
-  for (const key of queryKeys) {
-    if (query[key].length === 0) {
-      return res.status(statusCodes.NOT_FOUND).send(`${key} value is empty`);
+    const queryLength = Object.keys(query).length;
+    const firstParameter = Object.keys(query)[0];
+    const firstParameterValue = Object.values(query)[0];
+    if (firstParameterValue.length === 0){
+      res.status(statusCodes.NOT_FOUND).send("Input value is empty");
     }
-  }
+    let body = `?${firstParameter}=${firstParameterValue}`;
   
-  let messageBody = '';
-  // Construct the message body
-  for (let i = 0; i < queryLength; i++) {
-    const key = queryKeys[i];
-    const value = query[key];
-    messageBody += `${key}=${value}`;
-    if (i !== queryLength - 1) {
-      messageBody += '&';
+    if (queryLength === 2) {
+      const secondParameter = Object.keys(query)[1];
+      const secondParameterValue = Object.values(query)[1];
+      if (secondParameterValue.length === 0){
+        res.status(statusCodes.NOT_FOUND).send("Input value is empty");
+      }
+      body += `&${secondParameter}=${secondParameterValue}`;
     }
-  }
+  
+    const apiUrl = server + body;
+    console.log(apiUrl);
+  
+    helpers.getData(apiUrl)
+      .then(jsonResponse => {
+        console.log(jsonResponse);
 
-  console.log(messageBody);
+        var meal = jsonResponse.meal;
+        var dessert = jsonResponse.dessert;
+        var drink = jsonResponse.drink;
 
-  const topicName = 'recommendation-backend';
-  try {
-    await publishHelpers.publishMessage(topicName, messageBody);
-    console.log('Message published to Pub/Sub.')
+        console.log("Meal: " + meal);
+        console.log("Dessert: " + dessert); 
+        console.log("Drink: " + drink);
 
-    // Listen for recommendations
-    const subscriptionName = 'recommendation-service-sub';
-    listenForMessages(subscriptionName);
-    res.status(statusCodes.OK);
-} catch (error) {
-    console.error(`Error publishing message to Pub/Sub: ${error}`);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Error publishing message to Pub/Sub");
-}
-
-
-};
+        res.status(statusCodes.OK).json(jsonResponse);
+      })
+      .catch(error => {
+        if (error.status == 404) {
+          res.status(statusCodes.NOT_FOUND).send("Could not find a recommendation for that meal");
+        } else if (error.status == 400) {
+          res.status(statusCodes.BAD_REQUEST).send("Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters");
+        } else {
+          res.status(statusCodes.INTERNAL_SERVER_ERROR).send("Internal Server Error");
+        }
+      });
+  };
 
   module.exports = {
     getRecommendation,
