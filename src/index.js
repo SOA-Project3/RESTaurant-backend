@@ -33,6 +33,9 @@ router.post("/login", auth.login);
 router.post("/register", auth.register); 
 
 
+const booking = require("./controllers/Booking");
+router.get("/getAllScheduleLots", booking.getAllScheduleLots); 
+
 app.get('/menu', (req, res) => {
     res.json(menu);
   });
