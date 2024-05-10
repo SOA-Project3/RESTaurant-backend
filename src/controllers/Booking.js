@@ -87,6 +87,26 @@ async function allScheduleSlots(req, res, next) {
   }
 };
 
+async function bookedScheduleSlots(req, res, next) {
+  try {
+    const topicName = 'booking-backend';
+    // Publish the recommendation request
+    await publishMessage(topicName, "bookedScheduleSlots", "bookedScheduleSlots");
+
+    // Wait for the recommendation response from the subscription
+    const bookedScheduleSlots_response = await waitForRecommendation();
+    if(bookedScheduleSlots_response.status === 404){
+      res.status(statusCodes.NOT_FOUND).json(bookedScheduleSlots_response);   
+    }else{
+      // Send the recommendation response to the client
+      res.status(statusCodes.OK).json(JSON.parse(bookedScheduleSlots_response.message));  
+    }
+  } catch (error) {
+    console.error('Error publishing booking request:', error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
+  }
+};
+
 
 
 async function publishMessage(topicName, data, filter) {
@@ -132,5 +152,6 @@ async function waitForRecommendation() {
 module.exports = {
   availableScheduleSlots,
   userScheduleSlots,
-  allScheduleSlots
+  allScheduleSlots,
+  bookedScheduleSlots
 };
