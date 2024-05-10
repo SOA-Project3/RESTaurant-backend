@@ -13,11 +13,46 @@ const publisher = new PubSub({
 const subscriptionName = 'recommendation-service-sub';
 const subscription = subscriber.subscription(subscriptionName);
 
-async function getAllScheduleLots(req, res, next) {
+async function availableScheduleSlots(req, res, next) {
   try {
     const topicName = 'booking-backend';
     // Publish the recommendation request
     await publishMessage(topicName, "getAllScheduleLots", "getAllScheduleLots");
+
+    // Wait for the recommendation response from the subscription
+    const recommendation = await waitForRecommendation();
+    
+    // Send the recommendation response to the client
+    res.status(statusCodes.OK).json(recommendation);
+  } catch (error) {
+    console.error('Error publishing booking request:', error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).send('Error publishing booking request.');
+  }
+}
+
+async function userScheduleSlots(req, res, next) {
+  try {
+    const query = req.query;
+    console.log(query)
+
+    // Check if query is null, undefined, or an empty object
+    if (!query || Object.keys(query).length === 0) {
+      return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
+    }
+
+    // Check if the only parameter is UserId
+    if (Object.keys(query).length !== 1 || !query.hasOwnProperty('UserId')) {
+      return res.status(statusCodes.BAD_REQUEST).send('Only UserId parameter is allowed');
+    }
+
+    // Check if UserId value is empty or null
+    if (!query.UserId || !query.UserId.trim()) {
+      return res.status(statusCodes.BAD_REQUEST).send('UserId value is empty or null');
+    }
+
+    const topicName = 'booking-backend';
+    // Publish the recommendation request
+    await publishMessage(topicName, query, "userSchedulesLots");
 
     // Wait for the recommendation response from the subscription
     const recommendation = await waitForRecommendation();
@@ -71,5 +106,6 @@ async function waitForRecommendation() {
 }
 
 module.exports = {
-    getAllScheduleLots,
+  availableScheduleSlots,
+  userScheduleSlots
 };

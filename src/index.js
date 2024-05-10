@@ -17,9 +17,9 @@ app.use(function(req, res, next) {
   });
 
 const booking = require("./controllers/Booking");
-router.get("/getAllScheduleLots", booking.getAllScheduleLots); 
+router.get("/availableScheduleSlots", booking.availableScheduleSlots); 
+router.get("/userScheduleSlots", booking.userScheduleSlots); 
 
-router.get("/getAllScheduleLots2", booking.getAllScheduleLots); 
 const recommendationController = require("./controllers/Recommendations");
 router.get("/recommendations", recommendationController.getRecommendation); 
 
