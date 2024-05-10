@@ -116,7 +116,7 @@ async function waitForRecommendation() {
         try {
           // Process the received message
           const data = JSON.parse(message.data.toString());
-          console.log('Received recommendation');
+          console.log('Received response');
           message.ack();
           resolve(data);
         } catch (error) {
