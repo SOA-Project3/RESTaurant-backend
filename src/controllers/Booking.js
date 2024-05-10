@@ -66,9 +66,28 @@ async function userScheduleSlots(req, res, next) {
     res.status(statusCodes.OK).json(userSchedulesLots_response);
   } catch (error) {
     console.error('Error publishing booking request:', error);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).send('Error publishing booking request.');
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
   }
-}
+};
+
+async function allScheduleSlots(req, res, next) {
+  try {
+    const topicName = 'booking-backend';
+    // Publish the recommendation request
+    await publishMessage(topicName, "allScheduleSlots", "allScheduleSlots");
+
+    // Wait for the recommendation response from the subscription
+    const allScheduleSlots_response = await waitForRecommendation();
+    
+    // Send the recommendation response to the client
+    res.status(statusCodes.OK).json(allScheduleSlots_response);
+  } catch (error) {
+    console.error('Error publishing booking request:', error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
+  }
+};
+
+
 
 async function publishMessage(topicName, data, filter) {
   const jsonString = data ? JSON.stringify(data): '';
@@ -112,5 +131,6 @@ async function waitForRecommendation() {
 
 module.exports = {
   availableScheduleSlots,
-  userScheduleSlots
+  userScheduleSlots,
+  allScheduleSlots
 };

@@ -25,7 +25,7 @@ describe('RESTaurant App', () => {
     it('POST /sendFeedback should return status 400 for empty feedback', async () => {
       const response = await request(app)
         .post('/sendFeedback')
-        .send({ feedback: '' });
+        .json({ feedback: '' });
       expect(response.status).toBe(400);
       expect(response.text).toEqual('Bad Request response. Feedback is required.');
     });

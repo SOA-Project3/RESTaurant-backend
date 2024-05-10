@@ -27,7 +27,7 @@ describe('getRecommendation function', () => {
     req.query = { meal: 'pizza', drink: '' };
     await getRecommendation(req, res, next);
     expect(res.status).toHaveBeenCalledWith(statusCodes.NOT_FOUND);
-    expect(res.send).toHaveBeenCalledWith('Input value is empty');
+    expect(res.json).toHaveBeenCalledWith('Input value is empty');
   });
 
   it('should return 404 status and error message if API call returns 404 status', async () => {
@@ -35,7 +35,7 @@ describe('getRecommendation function', () => {
     helpers.getData.mockRejectedValueOnce({ status: 404 });
     await getRecommendation(req, res, next);
     expect(res.status).toHaveBeenCalledWith(statusCodes.NOT_FOUND);
-    expect(res.send).toHaveBeenCalledWith('Could not find a recommendation for that meal');
+    expect(res.json).toHaveBeenCalledWith('Could not find a recommendation for that meal');
   });
 
   it('should return 400 status and error message if API call returns 400 status', async () => {
@@ -43,7 +43,7 @@ describe('getRecommendation function', () => {
     helpers.getData.mockRejectedValueOnce({ status: 400 });
     await getRecommendation(req, res, next);
     expect(res.status).toHaveBeenCalledWith(statusCodes.BAD_REQUEST);
-    expect(res.send).toHaveBeenCalledWith('Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters');
+    expect(res.json).toHaveBeenCalledWith('Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters');
   }); 
 
   it('should return 500 status and error message if API call returns unknown error status', async () => {
@@ -51,7 +51,7 @@ describe('getRecommendation function', () => {
     helpers.getData.mockRejectedValueOnce({ status: 500 });
     await getRecommendation(req, res, next);
     expect(res.status).toBe(statusCodes.INTERNAL_SERVER_ERROR);
-    expect(res.send).toBe('Internal Server Error');
+    expect(res.json).toBe('Internal Server Error');
   });
 
   it('should return recommendation data with 200 status if API call is successful', async () => {

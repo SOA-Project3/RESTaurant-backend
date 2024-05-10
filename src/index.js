@@ -19,6 +19,7 @@ app.use(function(req, res, next) {
 const booking = require("./controllers/Booking");
 router.get("/availableScheduleSlots", booking.availableScheduleSlots); 
 router.get("/userScheduleSlots", booking.userScheduleSlots); 
+router.get("/allScheduleSlots", booking.allScheduleSlots); 
 
 const recommendationController = require("./controllers/Recommendations");
 router.get("/recommendations", recommendationController.getRecommendation); 
