@@ -17,7 +17,7 @@ async function getAllScheduleLots(req, res, next) {
   try {
     const topicName = 'booking-backend';
     // Publish the recommendation request
-    await publishMessage(topicName, "hola", "getAllScheduleLots");
+    await publishMessage(topicName, "getAllScheduleLots", "getAllScheduleLots");
 
     // Wait for the recommendation response from the subscription
     const recommendation = await waitForRecommendation();

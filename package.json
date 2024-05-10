@@ -15,7 +15,9 @@
     "@google-cloud/secret-manager": "^5.5.0",
     "axios": "^1.6.8",
     "express": "^4.19.2",
+    "install": "^0.13.0",
     "morgan": "^1.10.0",
+    "npm": "^10.7.0",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
