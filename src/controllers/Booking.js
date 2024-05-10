@@ -42,12 +42,12 @@ async function userScheduleSlots(req, res, next) {
 
     // Check if the only parameter is UserId
     if (Object.keys(query).length !== 1 || !query.hasOwnProperty('UserId')) {
-      return res.status(statusCodes.BAD_REQUEST).send('Only UserId parameter is allowed');
+      return res.status(statusCodes.BAD_REQUEST).json('Only UserId parameter is allowed');
     }
 
     // Check if UserId value is empty or null
     if (!query.UserId || !query.UserId.trim()) {
-      return res.status(statusCodes.BAD_REQUEST).send('UserId value is empty or null');
+      return res.status(statusCodes.BAD_REQUEST).json('UserId value is empty or null');
     }
 
     const topicName = 'booking-backend';
@@ -55,10 +55,15 @@ async function userScheduleSlots(req, res, next) {
     await publishMessage(topicName, query, "userSchedulesLots");
 
     // Wait for the recommendation response from the subscription
-    const recommendation = await waitForRecommendation();
+    const userSchedulesLots_response = await waitForRecommendation();
+
+    // If recommendation is empty, return a "Not Found" response
+    if (!userSchedulesLots_response) {
+      return res.status(statusCodes.NOT_FOUND).json('User has no reservations');
+    }
     
     // Send the recommendation response to the client
-    res.status(statusCodes.OK).json(recommendation);
+    res.status(statusCodes.OK).json(userSchedulesLots_response);
   } catch (error) {
     console.error('Error publishing booking request:', error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).send('Error publishing booking request.');
