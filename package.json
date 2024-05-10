@@ -5,13 +5,14 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/pubsub": "^4.4.0",
+    "@google-cloud/secret-manager": "^5.5.0",
     "axios": "^1.6.8",
     "express": "^4.19.2",
     "morgan": "^1.10.0",

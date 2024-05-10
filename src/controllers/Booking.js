@@ -1,18 +1,23 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const statusCodes = require("../constants/statusCodes");
-const topicName = 'booking-backend';
 
-const subscriber = new PubSub();
-const publisher = new PubSub();
+const keyFilename = process.env.keyfile;
 
+const subscriber = new PubSub({
+  keyFilename: keyFilename,
+});
+const publisher = new PubSub({
+  keyFilename: keyFilename,
+});
 // Set up a subscription to listen for messages
 const subscriptionName = 'recommendation-service-sub';
 const subscription = subscriber.subscription(subscriptionName);
 
 async function getAllScheduleLots(req, res, next) {
   try {
+    const topicName = 'booking-backend';
     // Publish the recommendation request
-    await publishMessage(topicName, "", "getAllScheduleLots");
+    await publishMessage(topicName, "hola", "getAllScheduleLots");
 
     // Wait for the recommendation response from the subscription
     const recommendation = await waitForRecommendation();
@@ -26,16 +31,16 @@ async function getAllScheduleLots(req, res, next) {
 }
 
 async function publishMessage(topicName, data, filter) {
-  const jsonString = JSON.stringify(data);
+  const jsonString = data ? JSON.stringify(data): '';
   const dataBuffer = Buffer.from(jsonString);
   const attributes = {
     name: filter
   };
-  
+  console.log(attributes)
     try {
     const messageId = await publisher
       .topic(topicName)
-      .publishMessage(dataBuffer, attributes);
+      .publishMessage({data:dataBuffer, attributes:attributes} );
     console.log(`Message ${messageId} published.`);
   } catch (error) {
     console.error(`Received error while publishing: ${error.message}`);
@@ -52,7 +57,7 @@ async function waitForRecommendation() {
         try {
           // Process the received message
           const data = JSON.parse(message.data.toString());
-          console.log('Received recommendation:', data);
+          console.log('Received recommendation');
           message.ack();
           resolve(data);
         } catch (error) {

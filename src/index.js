@@ -16,6 +16,10 @@ app.use(function(req, res, next) {
     next();
   });
 
+const booking = require("./controllers/Booking");
+router.get("/getAllScheduleLots", booking.getAllScheduleLots); 
+
+router.get("/getAllScheduleLots2", booking.getAllScheduleLots); 
 const recommendationController = require("./controllers/Recommendations");
 router.get("/recommendations", recommendationController.getRecommendation); 
 
@@ -33,8 +37,6 @@ router.post("/login", auth.login);
 router.post("/register", auth.register); 
 
 
-const booking = require("./controllers/Booking");
-router.get("/getAllScheduleLots", booking.getAllScheduleLots); 
 
 app.get('/menu', (req, res) => {
     res.json(menu);
