@@ -41,12 +41,12 @@ async function userScheduleSlots(req, res, next) {
     }
 
     // Check if the only parameter is UserId
-    if (Object.keys(query).length !== 1 || !query.hasOwnProperty('UserId')) {
+    if (Object.keys(query).length !== 1 || !query.hasOwnProperty('userId')) {
       return res.status(statusCodes.BAD_REQUEST).json('Only UserId parameter is allowed');
     }
 
     // Check if UserId value is empty or null
-    if (!query.UserId || !query.UserId.trim()) {
+    if (!query.userId || !query.userId.trim()) {
       return res.status(statusCodes.BAD_REQUEST).json('UserId value is empty or null');
     }
 
@@ -80,7 +80,7 @@ async function allScheduleSlots(req, res, next) {
     const allScheduleSlots_response = await waitForRecommendation();
     
     // Send the recommendation response to the client
-    res.status(statusCodes.OK).json(allScheduleSlots_response);
+    res.status(statusCodes.OK).json(allScheduleSlots_response.message);
   } catch (error) {
     console.error('Error publishing booking request:', error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
@@ -99,8 +99,55 @@ async function bookedScheduleSlots(req, res, next) {
       res.status(statusCodes.NOT_FOUND).json(bookedScheduleSlots_response);   
     }else{
       // Send the recommendation response to the client
-      res.status(statusCodes.OK).json(JSON.parse(bookedScheduleSlots_response.message));  
+      res.status(statusCodes.OK).json(bookedScheduleSlots_response.message);  
     }
+  } catch (error) {
+    console.error('Error publishing booking request:', error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
+  }
+};
+
+async function bookScheduleSlot(req, res, next) {
+  try {
+    const query = req.query;
+    console.log(query)
+
+    // Check if query is null, undefined, or an empty object
+    if (!query || Object.keys(query).length === 0) {
+      return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
+    }
+
+    // Validate query parameters
+    const allowedKeys = ['userId', 'scheduleSlotId', 'peopleQuantity'];
+    const queryKeys = Object.keys(query);
+
+    // Check if all required keys are present
+    const missingKeys = allowedKeys.filter(key => !queryKeys.includes(key));
+    if (missingKeys.length > 0) {
+      return res.status(statusCodes.BAD_REQUEST).json(`Missing required parameter(s): ${missingKeys.join(', ')}`);
+    }
+
+    // Check if any extra keys are present
+    const extraKeys = queryKeys.filter(key => !allowedKeys.includes(key));
+    if (extraKeys.length > 0) {
+      return res.status(statusCodes.BAD_REQUEST).json(`Unexpected parameter(s): ${extraKeys.join(', ')}`);
+    }
+
+    const topicName = 'booking-backend';
+    // Publish the recommendation request
+    await publishMessage(topicName, query, "bookScheduleSlot");
+
+    // Wait for the recommendation response from the subscription
+    const bookScheduleSlot_response = await waitForRecommendation();
+
+    // If recommendation is empty, return a "Not Found" response
+    if (bookScheduleSlot_response.status === 400) {
+      return res.status(statusCodes.BAD_REQUEST).json(bookScheduleSlot_response.error);
+    }else{
+      // Send the recommendation response to the client
+      res.status(statusCodes.OK).json(bookScheduleSlot_response.message);
+    }
+    
   } catch (error) {
     console.error('Error publishing booking request:', error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
@@ -137,6 +184,7 @@ async function waitForRecommendation() {
           // Process the received message
           const data = JSON.parse(message.data.toString());
           console.log('Received response');
+          console.log(data);
           message.ack();
           resolve(data);
         } catch (error) {
@@ -153,5 +201,6 @@ module.exports = {
   availableScheduleSlots,
   userScheduleSlots,
   allScheduleSlots,
-  bookedScheduleSlots
+  bookedScheduleSlots,
+  bookScheduleSlot
 };

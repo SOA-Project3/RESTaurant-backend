@@ -21,6 +21,8 @@ router.get("/availableScheduleSlots", booking.availableScheduleSlots);
 router.get("/userScheduleSlots", booking.userScheduleSlots); 
 router.get("/allScheduleSlots", booking.allScheduleSlots); 
 router.get("/bookedScheduleSlots", booking.bookedScheduleSlots); 
+router.get("/bookScheduleSlot", booking.bookScheduleSlot); 
+
 
 const recommendationController = require("./controllers/Recommendations");
 router.get("/recommendations", recommendationController.getRecommendation); 
