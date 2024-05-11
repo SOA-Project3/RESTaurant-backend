@@ -17,11 +17,14 @@ app.use(function(req, res, next) {
   });
 
 const booking = require("./controllers/Booking");
-router.get("/availableScheduleSlots", booking.availableScheduleSlots); 
-router.get("/userScheduleSlots", booking.userScheduleSlots); 
 router.get("/allScheduleSlots", booking.allScheduleSlots); 
+router.get("/availableScheduleSlots", booking.availableScheduleSlots); 
 router.get("/bookedScheduleSlots", booking.bookedScheduleSlots); 
-router.get("/bookScheduleSlot", booking.bookScheduleSlot); 
+router.get("/userScheduleSlots", booking.userScheduleSlots); 
+router.put("/bookScheduleSlot", booking.bookScheduleSlot); 
+router.put("/cancelScheduleSlot", booking.cancelScheduleSlot); 
+router.put("/updateScheduleSlotQuantity", booking.updateScheduleSlotQuantity); 
+router.delete("/deleteScheduleSlot", booking.deleteScheduleSlot); 
 
 
 const recommendationController = require("./controllers/Recommendations");
