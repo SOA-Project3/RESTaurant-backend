@@ -42,6 +42,7 @@ router.get("/getFeedback", getFeedback.getFeedback);
 const auth = require("./controllers/Authenticator");
 router.post("/login", auth.login); 
 router.post("/register", auth.register); 
+router.get("/getUserbyId", auth.userById); 
 
 
 
