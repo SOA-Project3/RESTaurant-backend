@@ -13,13 +13,19 @@ async function getData(url, next) {
     }
     return await response.json();
   } catch (error) {
-    console.error('Error:', error.response.status);
-    if (error.response.status === statusCodes.FORBIDDEN) {
+    if (error.status === statusCodes.FORBIDDEN) {
       error.status = statusCodes.FORBIDDEN;
-    } 
+    } else if (error.status === statusCodes.NOT_FOUND){
+      error.status = statusCodes.NOT_FOUND;
+    } else if (error.status === statusCodes.BAD_REQUEST){
+      error.status = statusCodes.BAD_REQUEST;
+    }else {
+      error.status = statusCodes.INTERNAL_SERVER_ERROR;
+    }
     throw error;
   }
 }
+
 
 async function postData(url, data) {
   try {
@@ -27,9 +33,14 @@ async function postData(url, data) {
     console.log('Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error:', error.response.status);
-    if (error.response.status === statusCodes.FORBIDDEN) {
+    if (error.status === statusCodes.FORBIDDEN) {
       error.status = statusCodes.FORBIDDEN;
+    } else if (error.status === statusCodes.NOT_FOUND){
+      error.status = statusCodes.NOT_FOUND;
+    } else if (error.status === statusCodes.BAD_REQUEST){
+      error.status = statusCodes.BAD_REQUEST;
+    }else {
+      error.status = statusCodes.INTERNAL_SERVER_ERROR;
     } 
     throw error;
   }

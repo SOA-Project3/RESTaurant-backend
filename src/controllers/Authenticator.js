@@ -62,7 +62,7 @@ const register = async(req, res) => {
       })
       .catch(error => {
         if (error.status == statusCodes.FORBIDDEN) {
-          res.status(statusCodes.FORBIDDEN).json('Id already exists');
+          res.status(statusCodes.FORBIDDEN).json('Invalid username or password');
         } else {
           res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
         }
