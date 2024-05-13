@@ -151,6 +151,40 @@ const resetPassword = async(req, res, next) => {
   }
 };
 
+const updatePassword = async(req, res, next) => {
+  const query = req.body;
+  console.log(query)
+
+  if (!query || Object.keys(query).length === 0) {
+    return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
+  }
+
+  // Validate query parameters
+  const allowedKeys = ['Id', 'Password'];
+  const queryKeys = Object.keys(query);
+
+  // Check if all required keys are present
+  const missingKeys = allowedKeys.filter(key => !queryKeys.includes(key));
+  if (missingKeys.length > 0) {
+    return res.status(statusCodes.BAD_REQUEST).json(`Missing required parameter(s): ${missingKeys.join(', ')}`);
+  }
+
+  // Check if any extra keys are present
+  const extraKeys = queryKeys.filter(key => !allowedKeys.includes(key));
+  if (extraKeys.length > 0) {
+    return res.status(statusCodes.BAD_REQUEST).json(`Unexpected parameter(s): ${extraKeys.join(', ')}`);
+  }
+  
+  try {
+    const topicName = 'auth-backend';
+    await publishMessage(topicName, query, "updatePassword");
+    return res.status(statusCodes.OK).json('Shortly, you will recieve an email confirming your change');
+
+  } catch (error) {
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error deleting user. Error: ' + error);
+  }
+};
+
 
 
 async function publishMessage(topicName, data, filter) {
@@ -177,5 +211,6 @@ async function publishMessage(topicName, data, filter) {
     login,
     userById,
     deleteUser,
-    resetPassword
+    resetPassword,
+    updatePassword
   };

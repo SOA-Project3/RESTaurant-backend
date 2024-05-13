@@ -45,6 +45,7 @@ router.post("/register", auth.register);
 router.get("/getUserbyId", auth.userById); 
 router.get("/deleteUser", auth.deleteUser); 
 router.get("/resetPassword", auth.resetPassword); 
+router.post("/updatePassword", auth.updatePassword); 
 
 
 
