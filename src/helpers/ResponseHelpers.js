@@ -33,11 +33,12 @@ async function postData(url, data) {
     console.log('Response:', response.data);
     return response.data;
   } catch (error) {
-    if (error.status === statusCodes.FORBIDDEN) {
+    console.log(error)
+    if (error.response.status === statusCodes.FORBIDDEN) {
       error.status = statusCodes.FORBIDDEN;
-    } else if (error.status === statusCodes.NOT_FOUND){
+    } else if (error.response.status === statusCodes.NOT_FOUND){
       error.status = statusCodes.NOT_FOUND;
-    } else if (error.status === statusCodes.BAD_REQUEST){
+    } else if (error.response.status === statusCodes.BAD_REQUEST){
       error.status = statusCodes.BAD_REQUEST;
     }else {
       error.status = statusCodes.INTERNAL_SERVER_ERROR;

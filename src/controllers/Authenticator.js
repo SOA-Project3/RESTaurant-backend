@@ -62,7 +62,7 @@ const register = async(req, res) => {
       })
       .catch(error => {
         if (error.status == statusCodes.FORBIDDEN) {
-          res.status(statusCodes.FORBIDDEN).json('Invalid username or password');
+          res.status(statusCodes.FORBIDDEN).json('Invalid username');
         } else {
           res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
         }
@@ -122,6 +122,36 @@ const deleteUser = async(req, res, next) => {
   }
 };
 
+const resetPassword = async(req, res, next) => {
+  const query = req.query;
+  console.log(query)
+
+  // Check if query is null, undefined, or an empty object
+  if (!query || Object.keys(query).length === 0) {
+    return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
+  }
+
+  // Check if the only parameter is UserId
+  if (Object.keys(query).length !== 1 || !query.hasOwnProperty('Id')) {
+    return res.status(statusCodes.BAD_REQUEST).json('Only Id parameter is allowed');
+  }
+
+  // Check if UserId value is empty or null
+  if (!query.Id || !query.Id.trim()) {
+    return res.status(statusCodes.BAD_REQUEST).json('Id value is empty or null');
+  }
+  
+  try {
+    const topicName = 'auth-backend';
+    await publishMessage(topicName, query, "password");
+    return res.status(statusCodes.OK).json('If email is registered, wait for email to get temporary password');
+
+  } catch (error) {
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error deleting user. Error: ' + error);
+  }
+};
+
+
 
 async function publishMessage(topicName, data, filter) {
   const jsonString = data ? JSON.stringify(data): '';
@@ -146,5 +176,6 @@ async function publishMessage(topicName, data, filter) {
     register,
     login,
     userById,
-    deleteUser
+    deleteUser,
+    resetPassword
   };
