@@ -244,7 +244,7 @@ async function deleteScheduleSlot(req, res, next) {
 
 async function createScheduleSlot(req, res, next) {
   try {
-    const query = req.query;
+    const query = req.body;
     console.log(query)
 
     // Check if query is null, undefined, or an empty object
