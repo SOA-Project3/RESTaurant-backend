@@ -51,7 +51,7 @@ async function userScheduleSlots(req, res, next) {
       return res.status(statusCodes.BAD_REQUEST).json('UserId value is empty or null');
     }
     
-    const apiUrl = server + "/availableScheduleSlots" + `?userId=${query.userId}`;
+    const apiUrl = server + "/userScheduleSlots" + `?userId=${query.userId}`;
     //const temp = "http://localhost:3000/" + + `?userId=${query.userId}`;
     console.log(apiUrl);
   
@@ -268,15 +268,7 @@ async function deleteScheduleSlot(req, res, next) {
     const topicName = 'booking-backend';
     await publishMessage(topicName, query, "deleteScheduleSlot");
 
-    const deleteScheduleSlot_response = await waitForRecommendation();
-
-    if (deleteScheduleSlot_response.status === 200){
-      res.status(statusCodes.OK).json(deleteScheduleSlot_response.message);
-    }else if (deleteScheduleSlot_response.status === 404){
-      return res.status(statusCodes.NOT_FOUND).json(deleteScheduleSlot_response.error);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(deleteScheduleSlot_response.error);
-    }
+    res.status(statusCodes.OK).json('Wait for email confirmation');
   } catch (error) {
     console.error('Error publishing booking request:', error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
