@@ -16,10 +16,10 @@ const subscription = subscriber.subscription(subscriptionName);
 
 async function availableScheduleSlots(req, res, next) {
   const apiUrl = server + "/availableScheduleSlots";
-  const temp = "http://localhost:8080/availableScheduleSlots";
-  console.log(temp);
+  //const temp = "http://localhost:8080/availableScheduleSlots";
+  console.log(apiUrl);
 
-  await helpers.getData(temp) 
+  await helpers.getData(apiUrl) 
     .then(jsonResponse => {
       res.status(statusCodes.OK).json(jsonResponse);
     })
@@ -33,47 +33,47 @@ async function availableScheduleSlots(req, res, next) {
 }
 
 async function userScheduleSlots(req, res, next) {
-  try {
-    const query = req.query;
-    console.log(query)
-
-    // Check if query is null, undefined, or an empty object
-    if (!query || Object.keys(query).length === 0) {
+  const query = req.query;
+  console.log(query)
+  
+  // Check if query is null, undefined, or an empty object
+  if (!query || Object.keys(query).length === 0) {
       return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
     }
-
+    
     // Check if the only parameter is UserId
     if (Object.keys(query).length !== 1 || !query.hasOwnProperty('userId')) {
       return res.status(statusCodes.BAD_REQUEST).json('Only UserId parameter is allowed');
     }
-
+    
     // Check if UserId value is empty or null
     if (!query.userId || !query.userId.trim()) {
       return res.status(statusCodes.BAD_REQUEST).json('UserId value is empty or null');
     }
-
-    const topicName = 'booking-backend';
-    await publishMessage(topicName, query, "userSchedulesLots");
-
-    const userSchedulesLots_response = await waitForRecommendation();
-
-    if (userSchedulesLots_response.status === 200){
-      res.status(statusCodes.OK).json(userSchedulesLots_response.message);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(userSchedulesLots_response.error);
-    }
-  } catch (error) {
-    console.error('Error publishing booking request:', error);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
-  }
+    
+    const apiUrl = server + "/availableScheduleSlots" + `?userId=${query.userId}`;
+    //const temp = "http://localhost:3000/" + + `?userId=${query.userId}`;
+    console.log(apiUrl);
+  
+    await helpers.getData(apiUrl) 
+      .then(jsonResponse => {
+        res.status(statusCodes.OK).json(jsonResponse);
+      })
+      .catch(error => {
+        if (error.status == statusCodes.NOT_FOUND) {
+          res.status(statusCodes.NOT_FOUND).json('No schedule slots found for the specified user');
+        } else {
+          res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
+        }
+      });
 };
 
 const allScheduleSlots = async(req, res) => {
   const apiUrl = server + "/allScheduleSlots";
-  const temp = "http://localhost:8080/allScheduleSlots";
-  console.log(temp);
+  //const temp = "http://localhost:8080/allScheduleSlots";
+  console.log(apiUrl);
 
-  await helpers.getData(temp) 
+  await helpers.getData(apiUrl) 
     .then(jsonResponse => {
       res.status(statusCodes.OK).json(jsonResponse);
     })
@@ -88,10 +88,10 @@ const allScheduleSlots = async(req, res) => {
 
 async function bookedScheduleSlots(req, res, next) {
   const apiUrl = server + "/bookedScheduleSlots";
-  const temp = "http://localhost:8080/bookedScheduleSlots";
-  console.log(temp);
+  //const temp = "http://localhost:8080/bookedScheduleSlots";
+  console.log(apiUrl);
 
-  await helpers.getData(temp) 
+  await helpers.getData(apiUrl) 
     .then(jsonResponse => {
       res.status(statusCodes.OK).json(jsonResponse);
     })
