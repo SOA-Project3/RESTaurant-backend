@@ -1,7 +1,9 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const statusCodes = require("../constants/statusCodes");
+const helpers = require("../helpers/ResponseHelpers");
 
 const keyFilename = process.env.keyfile;
+const server = "https://us-central1-soa-gr6-p3.cloudfunctions.net/booking";
 
 const subscriber = new PubSub({
   keyFilename: keyFilename,
@@ -13,21 +15,21 @@ const subscriptionName = 'recommendation-service-sub';
 const subscription = subscriber.subscription(subscriptionName);
 
 async function availableScheduleSlots(req, res, next) {
-  try {
-    const topicName = 'booking-backend';
-    await publishMessage(topicName, "getAllScheduleLots", "getAllScheduleLots");
+  const apiUrl = server + "/availableScheduleSlots";
+  const temp = "http://localhost:8080/availableScheduleSlots";
+  console.log(temp);
 
-    const availableScheduleSlots = await waitForRecommendation();
-    
-    if (availableScheduleSlots.status === 200){
-      res.status(statusCodes.OK).json(availableScheduleSlots.message);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(availableScheduleSlots.error);
-    }
-  } catch (error) {
-    console.error('Error publishing booking request:', error);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).send('Error publishing booking request.');
-  }
+  await helpers.getData(temp) 
+    .then(jsonResponse => {
+      res.status(statusCodes.OK).json(jsonResponse);
+    })
+    .catch(error => {
+      if (error.status == statusCodes.NOT_FOUND) {
+        res.status(statusCodes.NOT_FOUND).json('No available schedule slots found');
+      } else {
+        res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
+      }
+    });
 }
 
 async function userScheduleSlots(req, res, next) {
@@ -66,39 +68,40 @@ async function userScheduleSlots(req, res, next) {
   }
 };
 
-async function allScheduleSlots(req, res, next) {
-  try {
-    const topicName = 'booking-backend';
-    await publishMessage(topicName, "allScheduleSlots", "allScheduleSlots");
+const allScheduleSlots = async(req, res) => {
+  const apiUrl = server + "/allScheduleSlots";
+  const temp = "http://localhost:8080/allScheduleSlots";
+  console.log(temp);
 
-    const allScheduleSlots_response = await waitForRecommendation();
-    
-    res.status(statusCodes.OK).json(allScheduleSlots_response.message);
-  } catch (error) {
-    console.error('Error publishing booking request:', error);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
-  }
+  await helpers.getData(temp) 
+    .then(jsonResponse => {
+      res.status(statusCodes.OK).json(jsonResponse);
+    })
+    .catch(error => {
+      if (error.status == statusCodes.NOT_FOUND) {
+        res.status(statusCodes.NOT_FOUND).json('No schedule slots found');
+      } else {
+        res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
+      }
+    });
 };
 
 async function bookedScheduleSlots(req, res, next) {
-  try {
-    const topicName = 'booking-backend';
-    await publishMessage(topicName, "bookedScheduleSlots", "bookedScheduleSlots");
+  const apiUrl = server + "/bookedScheduleSlots";
+  const temp = "http://localhost:8080/bookedScheduleSlots";
+  console.log(temp);
 
-    const bookedScheduleSlots_response = await waitForRecommendation();
-    if (bookedScheduleSlots_response.status === 200){
-      res.status(statusCodes.OK).json(bookedScheduleSlots_response.message);
-    }else if (bookedScheduleSlots_response.status === 400) {
-      return res.status(statusCodes.BAD_REQUEST).json(bookedScheduleSlots_response.error);
-    }else if (bookedScheduleSlots_response.status === 404){
-      return res.status(statusCodes.NOT_FOUND).json(bookedScheduleSlots_response.error);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(bookedScheduleSlots_response.error);
-    }
-  } catch (error) {
-    console.error('Error publishing booking request:', error);
-    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
-  }
+  await helpers.getData(temp) 
+    .then(jsonResponse => {
+      res.status(statusCodes.OK).json(jsonResponse);
+    })
+    .catch(error => {
+      if (error.status == statusCodes.NOT_FOUND) {
+        res.status(statusCodes.NOT_FOUND).json('No booked schedule slots found');
+      }else {
+        res.status(statusCodes.INTERNAL_SERVER_ERROR).json("Internal Server Error");
+      }
+    });
 };
 
 async function bookScheduleSlot(req, res, next) {

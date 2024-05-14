@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan"); 
+const cors = require("cors"); 
 const bodyParser = require('body-parser');
 const menu = require("./models/menu.json"); 
 const port = 5555; 
@@ -10,11 +11,20 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(morgan("tiny")); //Log request
 app.use(bodyParser.json());
 
+
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5555"); // Update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  res.setHeader('Access-Control-Allow-Credentials', true);
     next();
-  });
+});
+
+// Use the cors middleware
+app.use(cors());
 
 const booking = require("./controllers/Booking");
 router.get("/allScheduleSlots", booking.allScheduleSlots); 
