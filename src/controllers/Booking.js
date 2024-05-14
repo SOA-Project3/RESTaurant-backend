@@ -132,17 +132,7 @@ async function bookScheduleSlot(req, res, next) {
     const topicName = 'booking-backend';
     await publishMessage(topicName, query, "bookScheduleSlot");
 
-    const bookScheduleSlot_response = await waitForRecommendation();
-
-    if (bookScheduleSlot_response.status === 200){
-      res.status(statusCodes.OK).json(bookScheduleSlot_response.message);
-    }else if (bookScheduleSlot_response.status === 400) {
-      return res.status(statusCodes.BAD_REQUEST).json(bookScheduleSlot_response.error);
-    }else if (bookScheduleSlot_response.status === 404){
-      return res.status(statusCodes.NOT_FOUND).json(bookScheduleSlot_response.error);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(bookScheduleSlot_response.error);
-    }
+    res.status(statusCodes.OK).json('Wait for email confirmation');
     
   } catch (error) {
     console.error('Error publishing booking request:', error);
@@ -179,18 +169,7 @@ async function cancelScheduleSlot(req, res, next) {
     const topicName = 'booking-backend';
     await publishMessage(topicName, query, "cancelScheduleSlot");
 
-    const scheduleSlotId_response = await waitForRecommendation();
-    if (scheduleSlotId_response.status === 200){
-      res.status(statusCodes.OK).json(scheduleSlotId_response.message);
-    }else if (scheduleSlotId_response.status === 400) {
-      return res.status(statusCodes.BAD_REQUEST).json(scheduleSlotId_response.error);
-    }else if (scheduleSlotId_response.status === 404){
-      return res.status(statusCodes.NOT_FOUND).json(scheduleSlotId_response.error);
-    }else if (scheduleSlotId_response.status === 401){
-      return res.status(statusCodes.FORBIDDEN).json(scheduleSlotId_response.error);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(scheduleSlotId_response.error);
-    }
+    res.status(statusCodes.OK).json('Wait for email confirmation');
   } catch (error) {
     console.error('Error publishing booking request:', error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
@@ -225,19 +204,7 @@ async function updateScheduleSlotQuantity(req, res, next) {
     const topicName = 'booking-backend';
     await publishMessage(topicName, query, "updateScheduleSlotQuantity");
 
-    const updateScheduleSlotQuantity_response = await waitForRecommendation();
-
-    if (updateScheduleSlotQuantity_response.status === 200){
-      res.status(statusCodes.OK).json(updateScheduleSlotQuantity_response.message);
-    }else if (updateScheduleSlotQuantity_response.status === 400) {
-      return res.status(statusCodes.BAD_REQUEST).json(updateScheduleSlotQuantity_response.error);
-    }else if (updateScheduleSlotQuantity_response.status === 401){
-      return res.status(statusCodes.FORBIDDEN).json(updateScheduleSlotQuantity_response.error);
-    }else if (updateScheduleSlotQuantity_response.status === 404){
-      return res.status(statusCodes.NOT_FOUND).json(updateScheduleSlotQuantity_response.error);
-    }else{
-      res.status(statusCodes.INTERNAL_SERVER_ERROR).json(updateScheduleSlotQuantity_response.error);
-    }
+    res.status(statusCodes.OK).json('Wait for email confirmation');
     
   } catch (error) {
     console.error('Error publishing booking request:', error);
@@ -267,6 +234,36 @@ async function deleteScheduleSlot(req, res, next) {
 
     const topicName = 'booking-backend';
     await publishMessage(topicName, query, "deleteScheduleSlot");
+
+    res.status(statusCodes.OK).json('Wait for email confirmation');
+  } catch (error) {
+    console.error('Error publishing booking request:', error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json('Error publishing booking request.');
+  }
+};
+
+async function createScheduleSlot(req, res, next) {
+  try {
+    const query = req.query;
+    console.log(query)
+
+    // Check if query is null, undefined, or an empty object
+    if (!query || Object.keys(query).length === 0) {
+      return res.status(statusCodes.BAD_REQUEST).json('Query params are missing');
+    }
+
+    // Check if the only parameter is UserId
+    if (Object.keys(query).length !== 1 || !query.hasOwnProperty('datetime')) {
+      return res.status(statusCodes.BAD_REQUEST).json('Only datetime parameter is allowed');
+    }
+
+    // Check if UserId value is empty or null
+    if (!query.datetime || !query.datetime.trim()) {
+      return res.status(statusCodes.BAD_REQUEST).json('datetime value is empty or null');
+    }
+
+    const topicName = 'booking-backend';
+    await publishMessage(topicName, query, "createScheduleSlot");
 
     res.status(statusCodes.OK).json('Wait for email confirmation');
   } catch (error) {
@@ -322,5 +319,6 @@ module.exports = {
   bookScheduleSlot,
   cancelScheduleSlot,
   updateScheduleSlotQuantity,
-  deleteScheduleSlot
+  deleteScheduleSlot,
+  createScheduleSlot
 };

@@ -35,6 +35,7 @@ router.put("/bookScheduleSlot", booking.bookScheduleSlot);
 router.put("/cancelScheduleSlot", booking.cancelScheduleSlot); 
 router.put("/updateScheduleSlotQuantity", booking.updateScheduleSlotQuantity); 
 router.delete("/deleteScheduleSlot", booking.deleteScheduleSlot); 
+router.post("/createScheduleSlot", booking.createScheduleSlot); 
 
 
 const recommendationController = require("./controllers/Recommendations");
