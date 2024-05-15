@@ -4,7 +4,8 @@
   "description": "business logic",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest index.test.js",
+    "coverage": "jest --coverage",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },

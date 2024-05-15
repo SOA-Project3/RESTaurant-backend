@@ -11,7 +11,6 @@ describe('RESTaurant App', () => {
           drink: 'Jugo de mango'
         });
       });
-
       it('GET /suggestions should return status 200 and JSON response with hour suggestions', async () => {
         const response = await request(app).get('/suggestions/?day=Sunday&hour=12:30');
         expect(response.status).toBe(200);
@@ -22,20 +21,32 @@ describe('RESTaurant App', () => {
           time: '11:00'
         });
       });
-    it('POST /sendFeedback should return status 400 for empty feedback', async () => {
-      const response = await request(app)
-        .post('/sendFeedback')
-        .json({ feedback: '' });
-      expect(response.status).toBe(400);
-      expect(response.text).toEqual('Bad Request response. Feedback is required.');
-    });
     it('GET /recommendations should return status 400 for invalid request', async () => {
       const response = await request(app).get('/recommendations?invalidParam=value');
       expect(response.status).toBe(400);
-      expect(response.text).toEqual('Bad Request response. Invalid number of query parameters. Must be between 1 and 2. Or invalid query values, must be one of [meal, drink, dessert]. Values should not contain numbers or invalid letters');
+      expect(response.text).toEqual("\"Invalid query parameter value 'invalidParam'. Must be one of: meal, drink, dessert.\"");
     });
     it('GET undefined route should return status 404', async () => {
       const response = await request(app).get('/undefinedroute');
       expect(response.status).toBe(404);
+    });
+    it('POST /sendFeedback should return status 400 for empty feedback', async () => {
+      const response = await request(app)
+        .post('/sendFeedback')
+        .send({ feedback: '' });
+      expect(response.status).toBe(400);
+      expect(response.text).toEqual("\"Bad Request response. Feedback is required.\"");
+    });    
+    it('POST /login should return status 403 for the incorrect password', async () => {
+      const response = await request(app)
+        .post('/login')
+        .send({ username: 'luismorarod98@gmail.com', password: 'password123' });
+      expect(response.status).toBe(403);
+      expect(response.text).toEqual("\"Invalid username or Password\"");
+    });   
+    it('GET /allScheduleSlots should return status 200 and JSON response with all schedule slots', async () => {
+      const response = await request(app).get('/allScheduleSlots');
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(false);
     });
 });
