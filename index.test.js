@@ -49,4 +49,27 @@ describe('RESTaurant App', () => {
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(false);
     });
+    it('GET /availableScheduleSlots should return status 200 and JSON response with all available schedule slots', async () => {
+      const response = await request(app).get('/availableScheduleSlots');
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(false);
+    });
+    it('GET /userScheduleSlots should return status 200', async () => {
+      const response = await request(app)
+        .get('/userScheduleSlots?userId=geogd.712@gmail.com');
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(false);
+    });
+    it('GET /bookedScheduleSlots should return status 200 and JSON response with all schedule slots', async () => {
+      const response = await request(app).get('/bookedScheduleSlots');
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(false);
+    });
+    it('GET /deleteScheduleSlot should return status 200 ', async () => {
+      const response = await request(app)
+        .post('/deleteScheduleSlot')
+        .send({ scheduleSlotId: 2});
+      expect(response.status).toBe(404);
+      expect(Array.isArray(response.body)).toBe(false);
+    });
 });
