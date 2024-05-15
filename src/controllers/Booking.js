@@ -16,7 +16,6 @@ const subscription = subscriber.subscription(subscriptionName);
 
 async function availableScheduleSlots(req, res, next) {
   const apiUrl = server + "/availableScheduleSlots";
-  //const temp = "http://localhost:8080/availableScheduleSlots";
   console.log(apiUrl);
 
   await helpers.getData(apiUrl) 
@@ -52,7 +51,6 @@ async function userScheduleSlots(req, res, next) {
     }
     
     const apiUrl = server + "/userScheduleSlots" + `?userId=${query.userId}`;
-    //const temp = "http://localhost:3000/" + + `?userId=${query.userId}`;
     console.log(apiUrl);
   
     await helpers.getData(apiUrl) 
@@ -70,7 +68,6 @@ async function userScheduleSlots(req, res, next) {
 
 const allScheduleSlots = async(req, res) => {
   const apiUrl = server + "/allScheduleSlots";
-  //const temp = "http://localhost:8080/allScheduleSlots";
   console.log(apiUrl);
 
   await helpers.getData(apiUrl) 
@@ -88,7 +85,6 @@ const allScheduleSlots = async(req, res) => {
 
 async function bookedScheduleSlots(req, res, next) {
   const apiUrl = server + "/bookedScheduleSlots";
-  //const temp = "http://localhost:8080/bookedScheduleSlots";
   console.log(apiUrl);
 
   await helpers.getData(apiUrl) 
