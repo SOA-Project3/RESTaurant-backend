@@ -1,7 +1,7 @@
 const statusCodes = require("../constants/statusCodes");
 const helpers = require("../helpers/ResponseHelpers")
 
-const server = "https://us-central1-soa-gr6-p3.cloudfunctions.net/recommendation/custom/"
+const server = "http://localhost:8000/custom/"
 
 /**
  * Handle external recommendation request
@@ -40,7 +40,7 @@ const getRecommendation = (req, res, next) => {
   const apiUrl = server + body;
   console.log(apiUrl);
 
-  helpers.getData(apiUrl)
+    helpers.getData(apiUrl)
       .then(jsonResponse => {
           console.log(jsonResponse);
 
