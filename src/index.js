@@ -11,13 +11,8 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(morgan("tiny")); //Log request
 app.use(bodyParser.json());
 
-
 // Use the cors middleware
 app.use(cors());
-
-const recommendationController = require("./controllers/Recommendations");
-router.get("/recommendations", recommendationController.getRecommendation); 
-
 
 app.get('/menu', (req, res) => {
     res.json(menu);
